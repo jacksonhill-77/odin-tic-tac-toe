@@ -5,14 +5,45 @@ const gameBoard = function gameBoard() {
         board[row][column] = symbol;
     }
 
-    // function checkIfGameWon(squareMarked, symbol) {
-    //     for (const i in board) {
-            
-    //     }
-    // }
+
+
+    checkIfGameWon = function checkIfGameWon(board, symbol) {
+        function checkRows() {
+            for (const row of board) {
+                for (const square of row) {
+                    if (square != symbol) {
+                        return false
+                    }
+                }
+
+                return true
+            }   
+        }
+
+        // function checkColumns() {
+        //     let columns = []
+
+        //     for (let row = 0; row < board.length; row++) {
+        //         columns.push([])
+        //         for (let col = 0; col < board[0].length; col++) {
+        //             columns[row].push(board[col][row]);
+        //         }
+        //     } 
+
+        //     console.log(columns)
+        // }
+
+        // checkColumns();
+
+        if (checkRows() == true) {
+            return true
+        }
+        
+    }   
+
 
     function player() {
-        const promptPlayerName = prompt('Please type your player name: ');
+        // const promptPlayerName = prompt('Please type your player name: ');
         let symbol = prompt('Please choose whether you want to play as noughts or crosses by entering n or c: ');
         symbol == 'n' ? symbol = 1 : symbol = 2; 
     
@@ -23,6 +54,7 @@ const gameBoard = function gameBoard() {
             row = +row - 1;
             column = +column - 1;
             markSquare(row, column, symbol);
+            console.log(checkIfGameWon(board, symbol));
             console.log(board);
         }
 
@@ -35,4 +67,6 @@ const gameBoard = function gameBoard() {
 
 const game = gameBoard();
 const player1 = game.player();
-player1.chooseSquareToMark()
+player1.chooseSquareToMark();
+player1.chooseSquareToMark();
+player1.chooseSquareToMark();
