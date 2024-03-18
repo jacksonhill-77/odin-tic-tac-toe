@@ -1,9 +1,15 @@
 const gameBoard = function gameBoard() {
-    let board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+    let board = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
 
-    const markSquare = function(squareToMark, symbol) {
-        board[squareToMark] = symbol;
+    const markSquare = function(row, column, symbol) {
+        board[row][column] = symbol;
     }
+
+    // function checkIfGameWon(squareMarked, symbol) {
+    //     for (const i in board) {
+            
+    //     }
+    // }
 
     function player() {
         const promptPlayerName = prompt('Please type your player name: ');
@@ -12,9 +18,11 @@ const gameBoard = function gameBoard() {
     
     
         const chooseSquareToMark = function() {
-            let squareToMark = prompt('Please choose which square you want to mark (top left = 1, bottom right = 9): ');
-            squareToMark = +squareToMark - 1;
-            markSquare(squareToMark, symbol);
+            let row = prompt('Please enter the row of the square you want to mark: ');
+            let column = prompt('Please enter the column of the square you want to mark: ');
+            row = +row - 1;
+            column = +column - 1;
+            markSquare(row, column, symbol);
             console.log(board);
         }
 
