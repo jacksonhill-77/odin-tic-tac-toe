@@ -9,8 +9,8 @@ const gameBoard = function gameBoard() {
 
     function checkIfGameWon(board, symbol) {
 
-        function checkSquares(board, symbol) {
-            for (const row of board) {
+        function checkSquares(arrays, symbol) {
+            for (const row of arrays) {
                 let squaresMarked = 0;
                 for (const square of row) {
                     if (square == symbol) {
@@ -39,24 +39,48 @@ const gameBoard = function gameBoard() {
             return columns
         }
 
+        function giveTopLeftDiagonal() {
+            let topLeftDiagonal = []
+            for (let rowCol = 0; rowCol < board.length; rowCol++) {
+                topLeftDiagonal.push(board[rowCol][rowCol]);
+            } return topLeftDiagonal
+        } 
+
+        function giveBottomLeftDiagonal() {
+            let bottomLeftDiagonal = []
+            for (let row = 3; row < board.length; row--) {
+                for (let col = 0; col < board.length; col++) {
+                    bottomLeftDiagonal.push(board[row][col]);
+                }
+            } return bottomLeftDiagonal
+        }   
+
         function checkRows() {
             return checkSquares(board, symbol)
         }
 
         function checkColumns() {
-            reversedBoard = convertRowsToColumns(board)
+            const reversedBoard = convertRowsToColumns(board)
             return checkSquares(reversedBoard, symbol)
         }
 
-        // function checkDiagonals() {
+        function checkDiagonals() {
+            const diagonals = []
+            diagonals.push(giveTopLeftDiagonal());
+            diagonals.push(giveBottomLeftDiagonal());
 
-        // }
+            return checkSquares(diagonals, symbol)
+        }
 
         if (checkRows() == true) {
             return true
         }
 
         if (checkColumns() == true) {
+            return true
+        }
+
+        if (checkDiagonals() == true) {
             return true
         }
 
