@@ -7,37 +7,60 @@ const gameBoard = function gameBoard() {
 
 
 
-    checkIfGameWon = function checkIfGameWon(board, symbol) {
-        function checkRows() {
+    function checkIfGameWon(board, symbol) {
+
+        function checkSquares(board, symbol) {
             for (const row of board) {
+                let squaresMarked = 0;
                 for (const square of row) {
-                    if (square != symbol) {
-                        return false
+                    if (square == symbol) {
+                        squaresMarked += 1;
                     }
                 }
-
-                return true
+                
+                if (squaresMarked == 3) {
+                    return true
+                }
             }   
+
+            return false
         }
 
-        // function checkColumns() {
-        //     let columns = []
+        function convertRowsToColumns() {
+            let columns = [[], [], []]
 
-        //     for (let row = 0; row < board.length; row++) {
-        //         columns.push([])
-        //         for (let col = 0; col < board[0].length; col++) {
-        //             columns[row].push(board[col][row]);
-        //         }
-        //     } 
+            for (let row = 0; row < board.length; row++) {
+                columns.push([])
+                for (let col = 0; col < board[0].length; col++) {
+                    columns[col].push(board[row][col]);
+                }
+            } 
 
-        //     console.log(columns)
+            return columns
+        }
+
+        function checkRows() {
+            return checkSquares(board, symbol)
+        }
+
+        function checkColumns() {
+            reversedBoard = convertRowsToColumns(board)
+            return checkSquares(reversedBoard, symbol)
+        }
+
+        // function checkDiagonals() {
+
         // }
-
-        // checkColumns();
 
         if (checkRows() == true) {
             return true
         }
+
+        if (checkColumns() == true) {
+            return true
+        }
+
+        return false
         
     }   
 
@@ -46,7 +69,6 @@ const gameBoard = function gameBoard() {
         // const promptPlayerName = prompt('Please type your player name: ');
         let symbol = prompt('Please choose whether you want to play as noughts or crosses by entering n or c: ');
         symbol == 'n' ? symbol = 1 : symbol = 2; 
-    
     
         const chooseSquareToMark = function() {
             let row = prompt('Please enter the row of the square you want to mark: ');
