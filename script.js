@@ -2,7 +2,11 @@ const gameBoard = function gameBoard() {
     let board = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
 
     const markSquare = function(row, column, symbol) {
-        board[row][column] = symbol;
+        if (board[row][column] != 0) {
+            console.log("Square already filled! Please choose a new one.")
+        } else {
+            board[row][column] = symbol;
+        }
     }
 
 
