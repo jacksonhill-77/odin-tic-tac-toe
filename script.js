@@ -1,16 +1,6 @@
 const gameBoard = function gameBoard() {
     let board = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
 
-    const markSquare = function(row, column, symbol) {
-        if (board[row][column] != 0) {
-            console.log("Square already filled! Please choose a new one.")
-        } else {
-            board[row][column] = symbol;
-        }
-    }
-
-
-
     function checkIfGameWon(board, symbol) {
 
         function checkSquares(arrays, symbol) {
@@ -92,31 +82,65 @@ const gameBoard = function gameBoard() {
         
     }   
 
+    function checkIfSquareFilled(board, row, column) {
+        if (board[row][column] != 0) {
+            alert("Square already filled! Please choose a new one.");
+            return false
+        } else return true
+    }
 
-    function player() {
-        // const promptPlayerName = prompt('Please type your player name: ');
-        let symbol = prompt('Please choose whether you want to play as noughts or crosses by entering n or c: ');
-        symbol == 'n' ? symbol = 1 : symbol = 2; 
-    
-        const chooseSquareToMark = function() {
-            let row = prompt('Please enter the row of the square you want to mark: ');
-            let column = prompt('Please enter the column of the square you want to mark: ');
+
+    function player(symbol, playerName) {
+
+        function chooseSquareToMark() {
+            let row = prompt(`${playerName}, please enter the row of the square you want to mark: `);
+            let column = prompt(`${playerName}, please enter the column of the square you want to mark: `);
             row = +row - 1;
             column = +column - 1;
-            markSquare(row, column, symbol);
-            console.log(checkIfGameWon(board, symbol));
-            console.log(board);
+            return [row, column]
         }
 
-        return { chooseSquareToMark }
+        const markSquare = function() {
+            let isSquareFilled = false;
+            let row;
+            let column;
+            while (isSquareFilled == false) {
+                [row, column] = chooseSquareToMark();
+                isSquareFilled = checkIfSquareFilled(board, row, column);
+            }
+            board[row][column] = symbol;
+        }
+
+        return { markSquare }
     }
 
     return { board, player };
 }
 
 
-const game = gameBoard();
-const player1 = game.player();
-player1.chooseSquareToMark();
-player1.chooseSquareToMark();
-player1.chooseSquareToMark();
+const gamePlayer = function gamePlayer() {
+    game = gameBoard()
+
+    let player1Symbol = parseInt(prompt('Player 1, please choose whether you want to play as noughts (1) or crosses (2):'));
+    let player2Symbol = 0;
+    player1Symbol == 1 ? player2Symbol = 2 : player2Symbol = 1;
+    alert(`Player 1 has chosen ${player1Symbol}. ${player2Symbol} automatically assigned to Player 2.`)
+
+    const player1 = game.player(player1Symbol, "Player 1");
+    const player2 = game.player(player2Symbol, "Player 2");
+
+    for (let turns = 0; turns < 9; turns++) {
+        if (turns == 9) {
+            console.log("It's a tie!");
+            break
+        } 
+        if (turns % 2 == 0) {
+            player1.markSquare()
+        } else {
+            player2.markSquare()
+        }
+    }
+}
+
+
+gamePlayer()
