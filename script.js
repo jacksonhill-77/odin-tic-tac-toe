@@ -114,17 +114,29 @@ const gameBoard = function gameBoard() {
         return { markSquare }
     }
 
-    return { board, player };
+    return { board, player, checkIfGameWon };
 }
 
 
 const gamePlayer = function gamePlayer() {
-    game = gameBoard()
+    const game = gameBoard()
+    let player1Wins = 0;
+    let player2Wins = 0;
+
+    const updateWins = function(winner) {
+        if (winner == 'player1') {
+            player1Wins += 1
+            alert(`Player 1 has won! Player 1 has won ${player1Wins} times.`)
+        } else {
+            player2Wins += 1
+            alert(`Player 2 has won! Player 2 has won ${player2Wins} times.`)
+        }
+    }
 
     let player1Symbol = parseInt(prompt('Player 1, please choose whether you want to play as noughts (1) or crosses (2):'));
     let player2Symbol = 0;
     player1Symbol == 1 ? player2Symbol = 2 : player2Symbol = 1;
-    alert(`Player 1 has chosen ${player1Symbol}. ${player2Symbol} automatically assigned to Player 2.`)
+    alert(`Player 1 has chosen '${player1Symbol}'. Player 2 has been automatically assigned '${player2Symbol}'.`)
 
     const player1 = game.player(player1Symbol, "Player 1");
     const player2 = game.player(player2Symbol, "Player 2");
@@ -136,8 +148,16 @@ const gamePlayer = function gamePlayer() {
         } 
         if (turns % 2 == 0) {
             player1.markSquare()
+            if (game.checkIfGameWon(game.board, player1Symbol)) {
+                updateWins('player1');
+                break
+            };
         } else {
             player2.markSquare()
+            if (game.checkIfGameWon(game.board, player2Symbol)) {
+                updateWins('player2');
+                break
+            };
         }
     }
 }
