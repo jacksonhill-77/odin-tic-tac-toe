@@ -1,5 +1,23 @@
+// const renderObjects = function() {
+
+//     const gameBoardContainer = document.querySelector('.game-board')
+
+//     const renderBoard = function(board) {
+//         for (let row of board) {
+//             for (let i of row) {
+//                 let square = document.createElement('div');
+//                 square.textContent = i.toString();
+//                 square.classList.add('square');
+//                 gameBoardContainer.appendChild(square);
+//             }
+//         }
+//     }
+
+//     return [renderBoard]
+// }
+
 const gameBoard = function gameBoard() {
-    let board = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+    let board = [["", "", ""], ["", "", ""], ["", "", ""]];
 
     function checkIfGameWon(board, symbol) {
 
@@ -117,7 +135,6 @@ const gameBoard = function gameBoard() {
     return { board, player, checkIfGameWon };
 }
 
-
 const gamePlayer = function gamePlayer() {
     let player1Wins = 0;
     let player2Wins = 0;
@@ -133,39 +150,41 @@ const gamePlayer = function gamePlayer() {
     }
 
     const playGame = function() {
-        
-        const setUpNewGame = function() {
-            const game = gameBoard()
 
-            let player1Symbol = parseInt(prompt('Player 1, please choose whether you want to play as noughts (1) or crosses (2):'));
-            let player2Symbol = 0;
-            player1Symbol == 1 ? player2Symbol = 2 : player2Symbol = 1;
+        const setUpNewGame = function() {
+            const board = gameBoard()
+
+            let player1Symbol = prompt('Player 1, please choose whether you want to play as noughts (O) or crosses (X):');
+            let player2Symbol = '';
+            player1Symbol == 'O' ? player2Symbol = 'X' : player2Symbol = 'O';
             alert(`Player 1 has chosen '${player1Symbol}'. Player 2 has been automatically assigned '${player2Symbol}'.`)
         
-            const player1 = game.player(player1Symbol, "Player 1");
-            const player2 = game.player(player2Symbol, "Player 2");
+            const player1 = board.player(player1Symbol, "Player 1");
+            const player2 = board.player(player2Symbol, "Player 2");
 
-            return [game, player1, player2, player1Symbol, player2Symbol]
+            return [board, player1, player2, player1Symbol, player2Symbol]
         }
 
         const playOneRound = function() {
 
-            [game, player1, player2, player1Symbol, player2Symbol] = setUpNewGame()
+            [board, player1, player2, player1Symbol, player2Symbol] = setUpNewGame();
+            [renderBoard] = renderObjects();
 
             for (let turns = 0; turns < 9; turns++) {
+                renderBoard(board.board)
                 if (turns == 9) {
                     alert("It's a tie!");
                     break
                 } 
                 if (turns % 2 == 0) {
                     player1.markSquare()
-                    if (game.checkIfGameWon(game.board, player1Symbol)) {
+                    if (board.checkIfGameWon(board.board, player1Symbol)) {
                         updateWins('player1');
                         break
                     };
                 } else {
                     player2.markSquare()
-                    if (game.checkIfGameWon(game.board, player2Symbol)) {
+                    if (board.checkIfGameWon(board.board, player2Symbol)) {
                         updateWins('player2');
                         break
                     };
