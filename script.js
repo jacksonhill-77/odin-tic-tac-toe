@@ -1,7 +1,25 @@
-let turns = 0;
+let turns = 0; 
 
-const gameBoard = function gameBoard() {
-    let board = [["", "", ""], ["", "", ""], ["", "", ""]];
+function Cell() {
+    let symbol = "";
+
+    const updateSymbol = (player) => {
+        symbol = player;
+    }
+    const getSymbol = () => symbol;
+
+    return { getSymbol, updateSymbol}
+}
+
+function GameBoard() {
+    let board = [];
+
+    for (let i = 0; i < 3; i++) {
+        board.push([]);
+        for (let j = 0; j < 3; j++) {
+            board[i].push(Cell);
+        }
+    }
 
     function checkIfGameWon(board, symbol) {
 
@@ -18,30 +36,30 @@ const gameBoard = function gameBoard() {
                     return true
                 }
             }   
-
+    
             return false
         }
-
+    
         function convertRowsToColumns() {
             let columns = [[], [], []]
-
+    
             for (let row = 0; row < board.length; row++) {
                 columns.push([])
                 for (let col = 0; col < board[0].length; col++) {
                     columns[col].push(board[row][col]);
                 }
             } 
-
+    
             return columns
         }
-
+    
         function giveTopLeftDiagonal() {
             let topLeftDiagonal = []
             for (let rowCol = 0; rowCol < board.length; rowCol++) {
                 topLeftDiagonal.push(board[rowCol][rowCol]);
             } return topLeftDiagonal
         } 
-
+    
         function giveBottomLeftDiagonal() {
             let bottomLeftDiagonal = []
             for (let row = 3; row < board.length; row--) {
@@ -50,39 +68,39 @@ const gameBoard = function gameBoard() {
                 }
             } return bottomLeftDiagonal
         }   
-
+    
         function checkRows() {
             return checkSquares(board, symbol)
         }
-
+    
         function checkColumns() {
             const reversedBoard = convertRowsToColumns(board)
             return checkSquares(reversedBoard, symbol)
         }
-
+    
         function checkDiagonals() {
             const diagonals = []
             diagonals.push(giveTopLeftDiagonal());
             diagonals.push(giveBottomLeftDiagonal());
-
+    
             return checkSquares(diagonals, symbol)
         }
-
+    
         if (checkRows() == true) {
             return true
         }
-
+    
         if (checkColumns() == true) {
             return true
         }
-
+    
         if (checkDiagonals() == true) {
             return true
         }
-
+    
         return false
         
-    }   
+    }  
 
     // Have another function that does this, but attached to the board
     function checkIfSquareFilled(board, row, column) {
@@ -92,7 +110,9 @@ const gameBoard = function gameBoard() {
         } else return true
     }
 
-    return { board, checkIfGameWon };
+    const getBoard = () => board;
+
+    return { getBoard, checkIfGameWon };
 }
 
 const renderObjects = function() {
@@ -121,6 +141,7 @@ const renderObjects = function() {
                     (turns % 2 == 0) ? mark = "X" : mark = "O";
                     const target = e.currentTarget;
                     target.parentNode.textContent = mark;
+                    board[row][i] = mark;
                     turns += 1;
                 })
 
@@ -130,14 +151,27 @@ const renderObjects = function() {
         }
 
         body.appendChild(gameBoardContainer);
+        return board
     }
 
     return createBoard
 }
 
-const gamePlayer = function gamePlayer() {
+function gamePlayer() {
+    let playerOneName = "Player One";
+    let playerTwoName = "Player Two";
     let player1Wins = 0;
     let player2Wins = 0;
+    const players = [
+        {
+            name: playerOneName,
+            symbol: "X"
+        },
+        {
+            name: playerTwoName,
+            symbol: "X"
+        }
+    ];
 
     const updateWins = function(winner) {
         if (winner == 'player1') {
@@ -155,10 +189,8 @@ const gamePlayer = function gamePlayer() {
         // Allows users to select their symbols
         // Creates a new board, returns the board and players
         const setUpNewGame = function() {
-            const board = gameBoard()
-
-            // Key line for transferring logic to the DOM
-            createBoard(board.board);
+            const gameBoard = GameBoard()
+            const board = gameBoard.getBoard()
 
             let player1Symbol = prompt('Player 1, please choose whether you want to play as noughts (O) or crosses (X):');
             let player2Symbol = '';
@@ -170,12 +202,10 @@ const gamePlayer = function gamePlayer() {
 
         const playOneRound = function() {
 
-            // Key line for transferring logic to the DOM
-            createBoard = renderObjects();
-
             userTurn = '';
 
             [board, player1Symbol, player2Symbol] = setUpNewGame();
+            createBoard = renderObjects(board);
 
             // This entire loop needs to be removed. Instead it goes back and forth between each person, 
             // counting the amount of times any button has been clicked in total
@@ -204,13 +234,24 @@ const gamePlayer = function gamePlayer() {
             }
         }
 
-        const newRoundButton = document.querySelector('.new-round');
-        newRoundButton.addEventListener('click', playOneRound());
+        return playOneRound()
+
+
     }
 
-    const newGameButton = document.querySelector('.new-game');
-    newGameButton.addEventListener('click', playGame());
+    return playGame()
+
+
 }
 
+const gamePlayerInstance = gamePlayer();
+const playGame = gamePlayerInstance.playGame();
+const playOneRound = gamePlayerInstance.playOneRound();
 
-gamePlayer()
+const newGameButton = document.querySelector('.new-game');
+newGameButton.addEventListener('click', playGame());
+
+const newRoundButton = document.querySelector('.new-round');
+newRoundButton.addEventListener('click', playOneRound());
+
+
