@@ -160,77 +160,58 @@ const renderObjects = function() {
 function gamePlayer() {
     let playerOneName = "Player One";
     let playerTwoName = "Player Two";
-    let player1Wins = 0;
-    let player2Wins = 0;
+    
     const players = [
         {
             name: playerOneName,
-            symbol: "X"
+            symbol: "X",
+            wins: 0
         },
         {
             name: playerTwoName,
-            symbol: "X"
+            symbol: "O",
+            wins: 0
         }
     ];
 
-    const updateWins = function(winner) {
-        if (winner == 'player1') {
-            player1Wins += 1
-            alert(`Player 1 has won! Player 1 has won ${player1Wins} times.`)
-        } else {
-            player2Wins += 1
-            alert(`Player 2 has won! Player 2 has won ${player2Wins} times.`)
-        }
-    }
-
     const playGame = function() {
+
+        const updateWins = function(winnerName) {
+            if (winnerName == playerOneName) {
+                players[0].wins += 1
+                alert(`Player 1 has won! Player 1 has won ${players[0].wins} times.`)
+            } else {
+                players[1].wins += 1
+                alert(`Player 2 has won! Player 2 has won ${players[1].wins} times.`)
+            }
+        }
 
         // Creates new game 
         // Allows users to select their symbols
         // Creates a new board, returns the board and players
         const setUpNewGame = function() {
-            const gameBoard = GameBoard()
-            const board = gameBoard.getBoard()
 
-            let player1Symbol = prompt('Player 1, please choose whether you want to play as noughts (O) or crosses (X):');
-            let player2Symbol = '';
-            player1Symbol == 'O' ? player2Symbol = 'X' : player2Symbol = 'O';
-            alert(`Player 1 has chosen '${player1Symbol}'. Player 2 has been automatically assigned '${player2Symbol}'.`)
-
-            return [board, player1Symbol, player2Symbol]
+            return board
         }
 
         const playOneRound = function() {
 
-            userTurn = '';
+            const gameBoard = GameBoard()
+            const board = gameBoard.getBoard()
 
-            [board, player1Symbol, player2Symbol] = setUpNewGame();
+            currentPlayer = players[0];
+
             createBoard = renderObjects(board);
 
-            // This entire loop needs to be removed. Instead it goes back and forth between each person, 
-            // counting the amount of times any button has been clicked in total
+            const changeTurn = () => currentPlayer === players[0] ? currentPlayer = players[1] : currentPlayer = players[0];
 
-            // add a new function (on gameboard?) which acts as a click, and carry out this same logic with it - 
-            // i.e. check if the game is won, update the wins accordingly
-            for (let turns = 0; turns < 9; turns++) {
-
-                if (turns == 9) {
-                    alert("It's a tie!");
-                    break
-                } 
-                if (turns % 2 == 0) {
-                    userTurn = 'X'
-                    if (board.checkIfGameWon(board.board, player1Symbol)) {
-                        updateWins('player1');
-                        break
-                    };
-                } else {
-                    userTurn = 'O'
-                    if (board.checkIfGameWon(board.board, player2Symbol)) {
-                        updateWins('player2');
-                        break
-                    };
-                }
+            const playTurn = function playTurn(cell) {
+                if (board.checkIfGameWon(board.board, currentPlayer.symbol)) {
+                    updateWins(currentPlayer.name)
+                } currentPlayer = players[1];
+                
+                cell.updateSymbol(currentPlayer.symbol);
+                changeTurn();
             }
         }
 
