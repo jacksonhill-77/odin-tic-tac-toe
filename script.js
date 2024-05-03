@@ -160,11 +160,8 @@ const gamePlayer = function gamePlayer() {
             let player2Symbol = '';
             player1Symbol == 'O' ? player2Symbol = 'X' : player2Symbol = 'O';
             alert(`Player 1 has chosen '${player1Symbol}'. Player 2 has been automatically assigned '${player2Symbol}'.`)
-        
-            const player1 = board.player(player1Symbol, "Player 1");
-            const player2 = board.player(player2Symbol, "Player 2");
 
-            return [board, player1, player2, player1Symbol, player2Symbol]
+            return [board, player1Symbol, player2Symbol]
         }
 
         const playOneRound = function() {
@@ -174,7 +171,7 @@ const gamePlayer = function gamePlayer() {
 
             userTurn = '';
 
-            [board, player1, player2, player1Symbol, player2Symbol] = setUpNewGame();
+            [board, player1Symbol, player2Symbol] = setUpNewGame();
 
             // This entire loop needs to be removed. Instead it goes back and forth between each person, 
             // counting the amount of times any button has been clicked in total
@@ -204,7 +201,6 @@ const gamePlayer = function gamePlayer() {
         }
 
         const newRoundButton = document.querySelector('.new-round');
-        console.log('hairy')
         newRoundButton.addEventListener('click', playOneRound());
     }
 
