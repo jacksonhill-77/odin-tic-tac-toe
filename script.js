@@ -1,20 +1,4 @@
-// const renderObjects = function() {
-
-//     const gameBoardContainer = document.querySelector('.game-board')
-
-//     const renderBoard = function(board) {
-//         for (let row of board) {
-//             for (let i of row) {
-//                 let square = document.createElement('div');
-//                 square.textContent = i.toString();
-//                 square.classList.add('square');
-//                 gameBoardContainer.appendChild(square);
-//             }
-//         }
-//     }
-
-//     return [renderBoard]
-// }
+let userTurn = '';
 
 const gameBoard = function gameBoard() {
     let board = [["", "", ""], ["", "", ""], ["", "", ""]];
@@ -109,30 +93,45 @@ const gameBoard = function gameBoard() {
 
 
     function player(symbol, playerName) {
-
-        function chooseSquareToMark() {
-            let row = prompt(`${playerName}, please enter the row of the square you want to mark: `);
-            let column = prompt(`${playerName}, please enter the column of the square you want to mark: `);
-            row = +row - 1;
-            column = +column - 1;
-            return [row, column]
-        }
-
-        const markSquare = function() {
-            let isSquareFilled = false;
-            let row;
-            let column;
-            while (isSquareFilled == false) {
-                [row, column] = chooseSquareToMark();
-                isSquareFilled = checkIfSquareFilled(board, row, column);
-            }
-            board[row][column] = symbol;
-        }
-
-        return { markSquare }
     }
 
     return { board, player, checkIfGameWon };
+}
+
+const renderObjects = function() {
+
+    const createBoard = function(board) {
+        const body = document.querySelector('body');
+        
+        if (document.querySelector('.game-board-container')) {
+            document.querySelector('.game-board-container').remove()
+        }
+        const gameBoardContainer = document.createElement('div');
+        gameBoardContainer.classList.add('game-board-container');
+
+        for (let row of board) {
+            for (let i of row) {
+                const square = document.createElement('div');
+                const button = document.createElement('button');
+                const symbol = i.toString();
+
+                square.textContent = symbol;
+                square.classList.add('square');
+
+                button.addEventListener('click', (e) => {
+                    const target = e.currentTarget;
+                    target.parentNode.textContent = userTurn;
+                })
+
+                square.appendChild(button);
+                gameBoardContainer.appendChild(square);
+            }
+        }
+
+        body.appendChild(gameBoardContainer);
+    }
+
+    return createBoard
 }
 
 const gamePlayer = function gamePlayer() {
@@ -154,6 +153,9 @@ const gamePlayer = function gamePlayer() {
         const setUpNewGame = function() {
             const board = gameBoard()
 
+            // Key line for transferring logic to the DOM
+            createBoard(board.board);
+
             let player1Symbol = prompt('Player 1, please choose whether you want to play as noughts (O) or crosses (X):');
             let player2Symbol = '';
             player1Symbol == 'O' ? player2Symbol = 'X' : player2Symbol = 'O';
@@ -167,23 +169,27 @@ const gamePlayer = function gamePlayer() {
 
         const playOneRound = function() {
 
+            // Key line for transferring logic to the DOM
+            createBoard = renderObjects();
+
+            userTurn = '';
+
             [board, player1, player2, player1Symbol, player2Symbol] = setUpNewGame();
-            [renderBoard] = renderObjects();
 
             for (let turns = 0; turns < 9; turns++) {
-                renderBoard(board.board)
+
                 if (turns == 9) {
                     alert("It's a tie!");
                     break
                 } 
                 if (turns % 2 == 0) {
-                    player1.markSquare()
+                    userTurn = 'X'
                     if (board.checkIfGameWon(board.board, player1Symbol)) {
                         updateWins('player1');
                         break
                     };
                 } else {
-                    player2.markSquare()
+                    userTurn = 'O'
                     if (board.checkIfGameWon(board.board, player2Symbol)) {
                         updateWins('player2');
                         break
@@ -192,9 +198,11 @@ const gamePlayer = function gamePlayer() {
             }
         }
 
+        // This logic should be on a button, so the user can choose when they want to play
         playOneRound()
     }
 
+    // This logic should be on a button
     const checkUserWantsToPlay = function() {
         doesUserWantToPlay = prompt('Do you want to play a game? Press y for yes, or n for no.')
         if (doesUserWantToPlay == 'y') {
@@ -203,6 +211,7 @@ const gamePlayer = function gamePlayer() {
         return false
     }   
 
+    // The loop can be removed - playGame() when user clicks button
     while (true){
         if (checkUserWantsToPlay() == true) {
             playGame()
