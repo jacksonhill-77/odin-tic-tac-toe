@@ -84,6 +84,7 @@ const gameBoard = function gameBoard() {
         
     }   
 
+    // Have another function that does this, but attached to the board
     function checkIfSquareFilled(board, row, column) {
         if (board[row][column] != 0) {
             alert("Square already filled! Please choose a new one.");
@@ -91,20 +92,16 @@ const gameBoard = function gameBoard() {
         } else return true
     }
 
-
-    function player(symbol, playerName) {
-    }
-
-    return { board, player, checkIfGameWon };
+    return { board, checkIfGameWon };
 }
 
 const renderObjects = function() {
 
     const createBoard = function(board) {
         const body = document.querySelector('body');
-        
+
         if (document.querySelector('.game-board-container')) {
-            document.querySelector('.game-board-container').remove()
+            document.querySelector('.game-board-container').remove();
         }
         const gameBoardContainer = document.createElement('div');
         gameBoardContainer.classList.add('game-board-container');
@@ -150,6 +147,9 @@ const gamePlayer = function gamePlayer() {
 
     const playGame = function() {
 
+        // Creates new game 
+        // Allows users to select their symbols
+        // Creates a new board, returns the board and players
         const setUpNewGame = function() {
             const board = gameBoard()
 
@@ -176,6 +176,11 @@ const gamePlayer = function gamePlayer() {
 
             [board, player1, player2, player1Symbol, player2Symbol] = setUpNewGame();
 
+            // This entire loop needs to be removed. Instead it goes back and forth between each person, 
+            // counting the amount of times any button has been clicked in total
+
+            // add a new function (on gameboard?) which acts as a click, and carry out this same logic with it - 
+            // i.e. check if the game is won, update the wins accordingly
             for (let turns = 0; turns < 9; turns++) {
 
                 if (turns == 9) {
@@ -198,27 +203,13 @@ const gamePlayer = function gamePlayer() {
             }
         }
 
-        // This logic should be on a button, so the user can choose when they want to play
-        playOneRound()
+        const newRoundButton = document.querySelector('.new-round');
+        console.log('hairy')
+        newRoundButton.addEventListener('click', playOneRound());
     }
 
-    // This logic should be on a button
-    const checkUserWantsToPlay = function() {
-        doesUserWantToPlay = prompt('Do you want to play a game? Press y for yes, or n for no.')
-        if (doesUserWantToPlay == 'y') {
-            return true
-        }
-        return false
-    }   
-
-    // The loop can be removed - playGame() when user clicks button
-    while (true){
-        if (checkUserWantsToPlay() == true) {
-            playGame()
-        } else {
-            break
-        }
-    }
+    const newGameButton = document.querySelector('.new-game');
+    newGameButton.addEventListener('click', playGame());
 }
 
 
