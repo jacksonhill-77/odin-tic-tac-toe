@@ -1,4 +1,4 @@
-let userTurn = '';
+let turns = 0;
 
 const gameBoard = function gameBoard() {
     let board = [["", "", ""], ["", "", ""], ["", "", ""]];
@@ -116,8 +116,12 @@ const renderObjects = function() {
                 square.classList.add('square');
 
                 button.addEventListener('click', (e) => {
+                    let mark = "";
+                    
+                    (turns % 2 == 0) ? mark = "X" : mark = "O";
                     const target = e.currentTarget;
-                    target.parentNode.textContent = userTurn;
+                    target.parentNode.textContent = mark;
+                    turns += 1;
                 })
 
                 square.appendChild(button);
