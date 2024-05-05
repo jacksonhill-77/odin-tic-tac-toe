@@ -173,44 +173,32 @@ function GamePlayer() {
 
 function RenderObjects() {
 
-    function markSquare(e, row, i) {
+    function markSquare(e, row, cell) {
         const target = e.currentTarget;
         const currentSymbol = game.getCurrentPlayer().symbol
         target.parentNode.textContent = currentSymbol;
-        board[row][i].updateSymbol(currentSymbol)
+        board[row][cell].updateSymbol(currentSymbol)
     }
 
-    function generateSquare(symbol, row, i) {
+    function generateSquare(row, cell) {
         const square = document.createElement('div');
         const button = document.createElement('button');
-        symbol = symbol.toString();
+        cell = cell.toString();
 
-        square.textContent = symbol;
+        square.textContent = cell;
         square.classList.add('square');
 
         button.addEventListener('click', function(e) {
-            markSquare(e, row, i)
+            markSquare(e, row, cell)
         })
 
         square.appendChild(button);
         return square
     }
 
-    function renderBoard(board) {
-        for (let row of board) {
-            for (let symbol of row) {
-                square = generateSquare(symbol, row, i)
-                gameBoardContainer.appendChild(square);
-            }
-        }
-
-        body.appendChild(gameBoardContainer);
-        return board
-    }
-
     const game = GamePlayer();
     const body = document.querySelector('body');
-    const boardDiv = document.querySelector('board');
+    const boardDiv = document.querySelector('.board');
     const playerTurnDiv = document.querySelector('div.turn');
     const board = game.getBoard();
 
@@ -218,6 +206,15 @@ function RenderObjects() {
         boardDiv.textContent = "";
         const currentPlayer = game.getCurrentPlayer();
         playerTurnDiv.textContent = `${currentPlayer.name} | ${currentPlayer.symbol} | Wins: ${currentPlayer.wins}`;
+
+        for (let row of board) {
+            for (let cell of row) {
+                square = generateSquare(row, cell)
+                boardDiv.appendChild(square);
+            }
+        }
+
+        body.appendChild(gameBoardContainer);
     }
 
     updateBoard(board)
