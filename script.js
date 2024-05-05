@@ -115,49 +115,11 @@ function GameBoard() {
     return { getBoard, checkIfGameWon };
 }
 
-const renderObjects = function() {
+function GamePlayer() {
 
-    const createBoard = function(board) {
-        const body = document.querySelector('body');
+    const gameBoard = GameBoard()
+    const board = gameBoard.getBoard()
 
-        if (document.querySelector('.game-board-container')) {
-            document.querySelector('.game-board-container').remove();
-        }
-        const gameBoardContainer = document.createElement('div');
-        gameBoardContainer.classList.add('game-board-container');
-
-        for (let row of board) {
-            for (let i of row) {
-                const square = document.createElement('div');
-                const button = document.createElement('button');
-                const symbol = i.toString();
-
-                square.textContent = symbol;
-                square.classList.add('square');
-
-                button.addEventListener('click', (e) => {
-                    let mark = "";
-                    
-                    (turns % 2 == 0) ? mark = "X" : mark = "O";
-                    const target = e.currentTarget;
-                    target.parentNode.textContent = mark;
-                    board[row][i] = mark;
-                    turns += 1;
-                })
-
-                square.appendChild(button);
-                gameBoardContainer.appendChild(square);
-            }
-        }
-
-        body.appendChild(gameBoardContainer);
-        return board
-    }
-
-    return createBoard
-}
-
-function gamePlayer() {
     let playerOneName = "Player One";
     let playerTwoName = "Player Two";
     
@@ -174,60 +136,124 @@ function gamePlayer() {
         }
     ];
 
-    const playGame = function() {
+    currentPlayer = players[0];
 
-        const updateWins = function(winnerName) {
-            if (winnerName == playerOneName) {
-                players[0].wins += 1
-                alert(`Player 1 has won! Player 1 has won ${players[0].wins} times.`)
-            } else {
-                players[1].wins += 1
-                alert(`Player 2 has won! Player 2 has won ${players[1].wins} times.`)
-            }
+    const getPlayers = () => players;
+    const getCurrentPlayer = () => currentPlayer;
+    const changeTurn = () => currentPlayer === players[0] ? currentPlayer = players[1] : currentPlayer = players[0];
+
+    const updateWins = function(winnerName) {
+        if (winnerName == playerOneName) {
+            players[0].wins += 1
+            alert(`Player 1 has won! Player 1 has won ${players[0].wins} times.`)
+        } else {
+            players[1].wins += 1
+            alert(`Player 2 has won! Player 2 has won ${players[1].wins} times.`)
         }
-
-        // Creates new game 
-        // Allows users to select their symbols
-        // Creates a new board, returns the board and players
-        const setUpNewGame = function() {
-
-            return board
-        }
-
-        const playOneRound = function() {
-
-            const gameBoard = GameBoard()
-            const board = gameBoard.getBoard()
-
-            currentPlayer = players[0];
-
-            createBoard = renderObjects(board);
-
-            const changeTurn = () => currentPlayer === players[0] ? currentPlayer = players[1] : currentPlayer = players[0];
-
-            const playTurn = function playTurn(cell) {
-                if (board.checkIfGameWon(board.board, currentPlayer.symbol)) {
-                    updateWins(currentPlayer.name)
-                } currentPlayer = players[1];
-                
-                cell.updateSymbol(currentPlayer.symbol);
-                changeTurn();
-            }
-        }
-
-        return playOneRound()
-
-
     }
 
-    return playGame()
+    const playOneRound = function() {
 
+        function playTurn(cell) {
+            if (board.checkIfGameWon(board.board, currentPlayer.symbol)) {
+                updateWins(currentPlayer.name)
+            } currentPlayer = players[1];
+            
+            cell.updateSymbol(currentPlayer.symbol);
+            changeTurn();
+        }
+    }
 
+    return { 
+        getCurrentPlayer, 
+        getPlayers, 
+        playOneRound, 
+        getBoard: gameBoard.getBoard }
 }
 
-const gamePlayerInstance = gamePlayer();
-const playGame = gamePlayerInstance.playGame();
-const playOneRound = gamePlayerInstance.playOneRound();
+function RenderObjects() {
+
+    function remakeBoard() {
+        if (document.querySelector('.game-board-container')) {
+            document.querySelector('.game-board-container').remove();
+        }
+        const gameBoardContainer = document.createElement('div');
+        gameBoardContainer.classList.add('game-board-container');
+    }
+
+    function markSquare(e, row, i) {
+        const target = e.currentTarget;
+        // this is the only time we get current player, do we need it outside this function?
+        const currentSymbol = game.getCurrentPlayer().symbol
+        target.parentNode.textContent = currentSymbol;
+        board[row][i].updateSymbol(currentSymbol)
+    }
+
+    function generateSquare(symbol, row, i) {
+        const square = document.createElement('div');
+        const button = document.createElement('button');
+        symbol = symbol.toString();
+
+        square.textContent = symbol;
+        square.classList.add('square');
+
+        button.addEventListener('click', function(e) {
+            markSquare(e, row, i)
+        })
+
+        square.appendChild(button);
+        return square
+    }
+
+    function renderBoard(board) {
+        for (let row of board) {
+            for (let symbol of row) {
+                square = generateSquare(symbol, row, i)
+                gameBoardContainer.appendChild(square);
+            }
+        }
+
+        body.appendChild(gameBoardContainer);
+        return board
+    }
+
+    const game = GamePlayer();
+    const body = document.querySelector('body');
+    const playerTurnDiv = document.querySelector('div.turn')
+
+    // clear the board
+    remakeBoard()
+    const board = game.getBoard()
+
+    // get the newest version of the board and player turn
+    // why?
+    const currentPlayer = game.getCurrentPlayer()
+
+
+    // {
+    //     name: playerOneName,
+    //     symbol: "X",
+    //     wins: 0
+    // }
+
+
+// Display player's turn
+    playerTurnDiv.textContent = `${currentPlayer.name} | ${currentPlayer.symbol} | Wins: ${currentPlayer.wins}`
+    
+
+// Render board squares
+// Anything clickable should be a button!!
+// Create a data attribute to identify the column
+// This makes it easier to pass into our 'playRound' function
+// Add event listener for the board
+// Make sure I've clicked a column and not the gaps in between
+// Initial render
+// We don't need to return anything from this module because everything is encapsulated inside this screen controller.
+
+    renderBoard(board)
+}
+
+RenderObjects()
 
 const newGameButton = document.querySelector('.new-game');
 newGameButton.addEventListener('click', playGame());
