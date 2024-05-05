@@ -173,14 +173,6 @@ function GamePlayer() {
 
 function RenderObjects() {
 
-    function remakeBoard() {
-        if (document.querySelector('.game-board-container')) {
-            document.querySelector('.game-board-container').remove();
-        }
-        const gameBoardContainer = document.createElement('div');
-        gameBoardContainer.classList.add('game-board-container');
-    }
-
     function markSquare(e, row, i) {
         const target = e.currentTarget;
         // this is the only time we get current player, do we need it outside this function?
@@ -219,11 +211,11 @@ function RenderObjects() {
 
     const game = GamePlayer();
     const body = document.querySelector('body');
-    const playerTurnDiv = document.querySelector('div.turn')
-
-    // clear the board
-    remakeBoard()
+    const boardDiv = document.querySelector('board');
+    const playerTurnDiv = document.querySelector('div.turn');
     const board = game.getBoard()
+
+    boardDiv.textContent = ""
 
     // get the newest version of the board and player turn
     // why?
