@@ -2,13 +2,14 @@ let turns = 0;
 
 function Cell() {
     let symbol = "";
+    let index = 0;
 
-    const updateSymbol = (player) => {
-        symbol = player;
-    }
+    const updateSymbol = (player) => symbol = player;
     const getSymbol = () => symbol;
+    const updateIndex = (newIndex) => index = newIndex
+    const getIndex = () => index;
 
-    return { getSymbol, updateSymbol}
+    return { getSymbol, updateSymbol, updateIndex, getIndex}
 }
 
 function GameBoard() {
@@ -147,7 +148,8 @@ function GamePlayer() {
 
     const playTurn = (cell) => {
         cell.updateSymbol(currentPlayer.symbol)
-        if (game.checkIfGameWon(game.board, cell.getSymbol)) {
+
+        if (gameBoard.checkIfGameWon(board, currentPlayer.symbol)) {
             currentPlayer.wins += 1;
             currentPlayer = players[1];
         } else {
@@ -171,10 +173,6 @@ function RenderObjects() {
         square.textContent = cell.getSymbol();
         square.classList.add('square');
 
-        button.addEventListener('click', function() {
-            game.playTurn(cell)
-        })
-
         square.appendChild(button);
         return square
     }
@@ -183,9 +181,15 @@ function RenderObjects() {
     const body = document.querySelector('body');
     const boardDiv = document.querySelector('.board');
     const playerTurnDiv = document.querySelector('div.turn');
-    const board = game.getBoard();
 
-    const updateBoard = (board) => {
+    const updateBoard = () => {
+        const board = game.getBoard();
+        board.forEach(row => {
+            row.forEach((cell, index) => {
+                square = generateSquare(cell);
+                boardDiv.appendChild(square);
+            }) 
+        })
         boardDiv.textContent = "";
         const currentPlayer = game.getCurrentPlayer();
         playerTurnDiv.textContent = `${currentPlayer.name} | ${currentPlayer.symbol} | Wins: ${currentPlayer.wins}`;
@@ -198,7 +202,17 @@ function RenderObjects() {
         }
     }
 
-    updateBoard(board)
+    button.addEventListener('click', function() {
+        game.playTurn(cell)
+    })
+
+    const clickHandlerBoard = (e) => {
+        const selectedSquare = e.target.
+        game.playTurn(selectedSquare)
+        updateBoard()
+    }
+
+    boardDiv.addEventListener(click, clickHandlerBoard);
 }
 
 RenderObjects()

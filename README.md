@@ -15,4 +15,6 @@ Lessons learned
 
 - A good structure for games is to only keep the logic in a GamePlayer object, and then refresh the entire screen each time a round is played. This is better than trying to handle clicks by updating the DOM text content and the GamePlayer object separately, which is what I tried to do at first. I was trying to avoid re-rendering the entire board each time a click is made, but I understand now that this is not a bad outcome and makes the code a lot cleaner.
 
-- Rather than looping over a 2D array with 2x for loops, you can loop over with 2x forEach loops
+- Rather than looping over a 2D array with 2x for loops, you can loop over with 2x forEach loops using the second forEach loop nested within an arrow function in the first forEach loop's argument
+
+- Given a board of cells, event listeners can be added to the board div rather than each individual cell. This technique is called event delegation, where the bubbling property of event listeners allow clicks at a higher level in the DOM to be listened to by lower elements. If the outer element's event is intended to be handled first, we can use the parameter "useCapture" in addEventListener.
