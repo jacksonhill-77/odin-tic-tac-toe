@@ -14,10 +14,12 @@ function Cell() {
 function GameBoard() {
     let board = [];
 
-    for (let i = 0; i < 3; i++) {
-        board.push([]);
-        for (let j = 0; j < 3; j++) {
-            board[i].push(Cell);
+    const initialiseGameBoard = () => {
+        for (let i = 0; i < 3; i++) {
+            board.push([]);
+            for (let j = 0; j < 3; j++) {
+                board[i].push(Cell());
+            }
         }
     }
 
@@ -27,7 +29,7 @@ function GameBoard() {
             for (const row of arrays) {
                 let squaresMarked = 0;
                 for (const square of row) {
-                    if (square == symbol) {
+                    if (square.getSymbol() == symbol) {
                         squaresMarked += 1;
                     }
                 }
@@ -112,12 +114,13 @@ function GameBoard() {
 
     const getBoard = () => board;
 
-    return { getBoard, checkIfGameWon };
+    return { initialiseGameBoard, getBoard, checkIfGameWon };
 }
 
 function GamePlayer() {
 
     const gameBoard = GameBoard()
+    gameBoard.initialiseGameBoard()
     const board = gameBoard.getBoard()
 
     let playerOneName = "Player One";
@@ -142,24 +145,12 @@ function GamePlayer() {
     const getCurrentPlayer = () => currentPlayer;
     const changeTurn = () => currentPlayer === players[0] ? currentPlayer = players[1] : currentPlayer = players[0];
 
-    const updateWins = function(winnerName) {
-        if (winnerName == playerOneName) {
-            players[0].wins += 1
-            alert(`Player 1 has won! Player 1 has won ${players[0].wins} times.`)
+    const playTurn = (cell) => {
+        cell.updateSymbol(currentPlayer.symbol)
+        if (game.checkIfGameWon(game.board, cell.getSymbol)) {
+            currentPlayer.wins += 1;
+            currentPlayer = players[1];
         } else {
-            players[1].wins += 1
-            alert(`Player 2 has won! Player 2 has won ${players[1].wins} times.`)
-        }
-    }
-
-    const playOneRound = function() {
-
-        function playTurn(cell) {
-            if (board.checkIfGameWon(board.board, currentPlayer.symbol)) {
-                updateWins(currentPlayer.name)
-            } currentPlayer = players[1];
-            
-            cell.updateSymbol(currentPlayer.symbol);
             changeTurn();
         }
     }
@@ -167,29 +158,21 @@ function GamePlayer() {
     return { 
         getCurrentPlayer, 
         getPlayers, 
-        playOneRound, 
+        playTurn, 
         getBoard: gameBoard.getBoard }
 }
 
 function RenderObjects() {
 
-    function markSquare(e, row, cell) {
-        const target = e.currentTarget;
-        const currentSymbol = game.getCurrentPlayer().symbol
-        target.parentNode.textContent = currentSymbol;
-        board[row][cell].updateSymbol(currentSymbol)
-    }
-
-    function generateSquare(row, cell) {
+    function generateSquare(cell) {
         const square = document.createElement('div');
         const button = document.createElement('button');
-        cell = cell.toString();
 
-        square.textContent = cell;
+        square.textContent = cell.getSymbol();
         square.classList.add('square');
 
-        button.addEventListener('click', function(e) {
-            markSquare(e, row, cell)
+        button.addEventListener('click', function() {
+            game.playTurn(cell)
         })
 
         square.appendChild(button);
@@ -209,23 +192,15 @@ function RenderObjects() {
 
         for (let row of board) {
             for (let cell of row) {
-                square = generateSquare(row, cell)
+                square = generateSquare(cell)
                 boardDiv.appendChild(square);
             }
         }
-
-        body.appendChild(gameBoardContainer);
     }
 
     updateBoard(board)
 }
 
 RenderObjects()
-
-const newGameButton = document.querySelector('.new-game');
-newGameButton.addEventListener('click', playGame());
-
-const newRoundButton = document.querySelector('.new-round');
-newRoundButton.addEventListener('click', playOneRound());
 
 
