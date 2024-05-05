@@ -175,7 +175,6 @@ function RenderObjects() {
 
     function markSquare(e, row, i) {
         const target = e.currentTarget;
-        // this is the only time we get current player, do we need it outside this function?
         const currentSymbol = game.getCurrentPlayer().symbol
         target.parentNode.textContent = currentSymbol;
         board[row][i].updateSymbol(currentSymbol)
@@ -213,36 +212,15 @@ function RenderObjects() {
     const body = document.querySelector('body');
     const boardDiv = document.querySelector('board');
     const playerTurnDiv = document.querySelector('div.turn');
-    const board = game.getBoard()
+    const board = game.getBoard();
 
-    boardDiv.textContent = ""
+    const updateBoard = (board) => {
+        boardDiv.textContent = "";
+        const currentPlayer = game.getCurrentPlayer();
+        playerTurnDiv.textContent = `${currentPlayer.name} | ${currentPlayer.symbol} | Wins: ${currentPlayer.wins}`;
+    }
 
-    // get the newest version of the board and player turn
-    // why?
-    const currentPlayer = game.getCurrentPlayer()
-
-
-    // {
-    //     name: playerOneName,
-    //     symbol: "X",
-    //     wins: 0
-    // }
-
-
-// Display player's turn
-    playerTurnDiv.textContent = `${currentPlayer.name} | ${currentPlayer.symbol} | Wins: ${currentPlayer.wins}`
-    
-
-// Render board squares
-// Anything clickable should be a button!!
-// Create a data attribute to identify the column
-// This makes it easier to pass into our 'playRound' function
-// Add event listener for the board
-// Make sure I've clicked a column and not the gaps in between
-// Initial render
-// We don't need to return anything from this module because everything is encapsulated inside this screen controller.
-
-    renderBoard(board)
+    updateBoard(board)
 }
 
 RenderObjects()
