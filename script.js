@@ -38,8 +38,6 @@ function GameBoard() {
     }
 
     function updateCell(row, col, symbol) {
-        console.log(board[row]);
-        console.log(board[row][col]);
         board[row][col].updateSymbol(symbol);
     }
 
@@ -219,14 +217,18 @@ function RenderObjects() {
             }) 
         })
         
-        playerTurnDiv.textContent = `${currentPlayer.name} | ${currentPlayer.symbol} | Wins: ${currentPlayer.wins}`;
+        playerTurnDiv.textContent = `Current turn: ${currentPlayer.name}. Symbol: ${currentPlayer.symbol}. Wins: ${currentPlayer.wins}`;
     }
 
     const clickHandlerBoard = (e) => {
-        const clickedSquareRow = e.target.dataset.row;
-        const clickedSquareCol = e.target.dataset.col;
-        game.playTurn(clickedSquareRow, clickedSquareCol);
-        updateBoard()
+        if (e.target.textContent != "") {
+            alert("Please select a square that hasn't been clicked yet!")
+        } else {
+            const clickedSquareRow = e.target.dataset.row;
+            const clickedSquareCol = e.target.dataset.col;
+            game.playTurn(clickedSquareRow, clickedSquareCol);
+            updateBoard()
+        }
     }
 
     updateBoard()

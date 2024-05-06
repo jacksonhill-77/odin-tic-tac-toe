@@ -1,23 +1,68 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    font-family: 'Roboto', sans-serif;
+}
+
+button {
+    font-family: 'Roboto', sans-serif;
+}
+
+.turn,
+.board,
+div .new,
+.header {
+    width: 500px;
+}
+
+.header {
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    font-weight: 600;
+}
+
+.turn {
+    display: flex;
+    justify-content: center;
+}
+
 .board {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
-    width: 100%;
-    height: auto;
+    gap: 2px;
+    width: 500px;
+    height: 500px;
 }
 
 .square-button {
-    font-size: 1.5rem;
+    font-size: 3rem;
     display: grid;
     justify-content: center;
     align-items: center;
-    width: 50px;
-    height: 50px;
-    background-color: rgb(241, 223, 223);
-    border: 2px rgb(134, 134, 134) solid;
+    background-color: rgb(223, 241, 239);
+    border: 2px rgb(94, 104, 107) solid;
 } 
 
-div .turn {
-    width: 300px;
+div.turn {
+    width: 500px;
     height: 50px;
+}
+
+div.new {
+
+}
+
+button.new {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    font-size: 1rem;
+    padding: 15px;
 }
