@@ -2,14 +2,17 @@ let turns = 0;
 
 function Cell() {
     let symbol = "";
-    let index = 0;
+    let row = 0;
+    let col = 0;
 
     const updateSymbol = (player) => symbol = player;
     const getSymbol = () => symbol;
-    const updateIndex = (newIndex) => index = newIndex
-    const getIndex = () => index;
+    const updateRow = (newIndex) => row = newIndex;
+    const updateCol = (newIndex) => col = newIndex;
+    const getRow = () => row;
+    const getCol = () => col;
 
-    return { getSymbol, updateSymbol, updateIndex, getIndex}
+    return { getSymbol, updateSymbol, updateRow, updateCol, getRow, getCol}
 }
 
 function GameBoard() {
@@ -19,7 +22,9 @@ function GameBoard() {
         for (let i = 0; i < 3; i++) {
             board.push([]);
             for (let j = 0; j < 3; j++) {
-                board[i].push(Cell());
+                cell = Cell()
+                cell.updateIndex(i + j)
+                board[i].push(cell);
             }
         }
     }
@@ -146,7 +151,7 @@ function GamePlayer() {
     const getCurrentPlayer = () => currentPlayer;
     const changeTurn = () => currentPlayer === players[0] ? currentPlayer = players[1] : currentPlayer = players[0];
 
-    const playTurn = (cell) => {
+    const playTurn = (cell, index) => {
         cell.updateSymbol(currentPlayer.symbol)
 
         if (gameBoard.checkIfGameWon(board, currentPlayer.symbol)) {
@@ -166,12 +171,14 @@ function GamePlayer() {
 
 function RenderObjects() {
 
-    function generateSquare(cell) {
+    function generateSquare(cell, row, col) {
         const square = document.createElement('div');
         const button = document.createElement('button');
 
         square.textContent = cell.getSymbol();
         square.classList.add('square');
+        square.dataset.row = row;
+        square.dataset.col = col;
 
         square.appendChild(button);
         return square
@@ -184,30 +191,20 @@ function RenderObjects() {
 
     const updateBoard = () => {
         const board = game.getBoard();
-        board.forEach(row => {
-            row.forEach((cell, index) => {
-                square = generateSquare(cell);
+        const currentPlayer = game.getCurrentPlayer();
+
+        boardDiv.textContent = "";
+        board.forEach(row, rowIndex => {
+            row.forEach((cell, colIndex) => {
+                square = generateSquare(cell, rowIndex, colIndex);
                 boardDiv.appendChild(square);
             }) 
         })
-        boardDiv.textContent = "";
-        const currentPlayer = game.getCurrentPlayer();
         playerTurnDiv.textContent = `${currentPlayer.name} | ${currentPlayer.symbol} | Wins: ${currentPlayer.wins}`;
-
-        for (let row of board) {
-            for (let cell of row) {
-                square = generateSquare(cell)
-                boardDiv.appendChild(square);
-            }
-        }
     }
 
-    button.addEventListener('click', function() {
-        game.playTurn(cell)
-    })
-
     const clickHandlerBoard = (e) => {
-        const selectedSquare = e.target.
+        const clickedSquareIndex = e.target.dataset.index;
         game.playTurn(selectedSquare)
         updateBoard()
     }
