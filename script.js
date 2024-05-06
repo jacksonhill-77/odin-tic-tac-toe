@@ -39,9 +39,7 @@ function GameBoard() {
 
     const resetGameBoard = () => {
         board = [];
-        console.log(board)
         initialiseGameBoard()
-        console.log(board)
     }
 
     function updateCell(row, col, symbol) {
@@ -128,14 +126,6 @@ function GameBoard() {
         return false
         
     }  
-
-    // // Have another function that does this, but attached to the board
-    // function checkIfSquareFilled(board, row, column) {
-    //     if (board[row][column] != 0) {
-    //         alert("Square already filled! Please choose a new one.");
-    //         return false
-    //     } else return true
-    // }
 
     const getBoard = () => board;
 
@@ -241,8 +231,8 @@ function RenderObjects() {
     } 
 
     const newGame = () => {
-        resetBoard();
         game.resetWins();
+        resetBoard();
     }
 
     const clickHandlerBoard = (e) => {
