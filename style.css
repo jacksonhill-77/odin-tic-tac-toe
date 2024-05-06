@@ -4,15 +4,21 @@ body {
     align-items: center;
     gap: 20px;
     font-family: 'Roboto', sans-serif;
+    background-color: #deebc7;
 }
 
 button {
     font-family: 'Roboto', sans-serif;
+    border: 2px #AFC97E solid;
+}
+
+* {
+    color: #877B66;
 }
 
 .turn,
 .board,
-div .new,
+div.new,
 .header {
     width: 500px;
 }
@@ -42,11 +48,11 @@ div .new,
 
 .square-button {
     font-size: 3rem;
+    color: #296EB4;
     display: grid;
     justify-content: center;
     align-items: center;
-    background-color: rgb(223, 241, 239);
-    border: 2px rgb(94, 104, 107) solid;
+    background-color: #E2D686;
 } 
 
 div.turn {
@@ -55,7 +61,8 @@ div.turn {
 }
 
 div.new {
-
+    display: flex;
+    justify-content: space-between;
 }
 
 button.new {
@@ -65,4 +72,6 @@ button.new {
     height: 30px;
     font-size: 1rem;
     padding: 15px;
+    border-radius: 10px;
+    border-width: 3px;
 }

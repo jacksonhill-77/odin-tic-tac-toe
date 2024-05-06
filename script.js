@@ -37,6 +37,13 @@ function GameBoard() {
         }
     }
 
+    const resetGameBoard = () => {
+        board = [];
+        console.log(board)
+        initialiseGameBoard()
+        console.log(board)
+    }
+
     function updateCell(row, col, symbol) {
         board[row][col].updateSymbol(symbol);
     }
@@ -134,6 +141,7 @@ function GameBoard() {
 
     return { 
         initialiseGameBoard, 
+        resetGameBoard,
         getBoard, 
         checkIfGameWon,
         updateCell
@@ -167,6 +175,10 @@ function GamePlayer() {
     const getPlayers = () => players;
     const getCurrentPlayer = () => currentPlayer;
     const changeTurn = () => currentPlayer === players[0] ? currentPlayer = players[1] : currentPlayer = players[0];
+    const resetWins = () => {
+        players[0].wins = 0;
+        players[1].wins = 0;
+    }
 
     const playTurn = (row, col) => {
         gameBoard.updateCell(row, col, currentPlayer.symbol);
@@ -183,11 +195,19 @@ function GamePlayer() {
         getCurrentPlayer, 
         getPlayers, 
         playTurn, 
-        getBoard: gameBoard.getBoard
+        resetWins,
+        getBoard: gameBoard.getBoard,
+        resetGameBoard: gameBoard.resetGameBoard
      }
 }
 
 function RenderObjects() {
+
+    const game = GamePlayer();
+    const boardDiv = document.querySelector('.board');
+    const playerTurnDiv = document.querySelector('div.turn');
+    const newGameButton = document.querySelector('.new-game');
+    const newRoundButton = document.querySelector('.new-round');
 
     function generateSquare(cell, row, col) {
         const button = document.createElement('button');
@@ -199,11 +219,6 @@ function RenderObjects() {
 
         return button
     }
-
-    const game = GamePlayer();
-    const body = document.querySelector('body');
-    const boardDiv = document.querySelector('.board');
-    const playerTurnDiv = document.querySelector('div.turn');
 
     const updateBoard = () => {
         const board = game.getBoard();
@@ -220,6 +235,16 @@ function RenderObjects() {
         playerTurnDiv.textContent = `Current turn: ${currentPlayer.name}. Symbol: ${currentPlayer.symbol}. Wins: ${currentPlayer.wins}`;
     }
 
+    const resetBoard = () => {
+        game.resetGameBoard();
+        updateBoard();
+    } 
+
+    const newGame = () => {
+        resetBoard();
+        game.resetWins();
+    }
+
     const clickHandlerBoard = (e) => {
         if (e.target.textContent != "") {
             alert("Please select a square that hasn't been clicked yet!")
@@ -232,6 +257,9 @@ function RenderObjects() {
     }
 
     updateBoard()
+
+    newGameButton.addEventListener("click", newGame)
+    newRoundButton.addEventListener("click", resetBoard)
     boardDiv.addEventListener("click", clickHandlerBoard);
 }
 
