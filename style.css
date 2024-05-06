@@ -6,7 +6,8 @@
     height: auto;
 }
 
-.square {
+.square-button {
+    font-size: 1.5rem;
     display: grid;
     justify-content: center;
     align-items: center;
@@ -14,12 +15,6 @@
     height: 50px;
     background-color: rgb(241, 223, 223);
     border: 2px rgb(134, 134, 134) solid;
-}
-
-button .new {
-    width: 100px;
-    height: 30px;
-    font-size: 1.5rem;;
 } 
 
 div .turn {

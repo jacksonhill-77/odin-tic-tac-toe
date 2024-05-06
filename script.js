@@ -30,14 +30,17 @@ function GameBoard() {
             board.push([]);
             for (let j = 0; j < 3; j++) {
                 cell = Cell()
-                cell.updateIndex(i + j)
+                cell.updateRow(i)
+                cell.updateCol(j)
                 board[i].push(cell);
             }
         }
     }
 
     function updateCell(row, col, symbol) {
-        board[row][col].updateSymbol(symbol)
+        console.log(board[row]);
+        console.log(board[row][col]);
+        board[row][col].updateSymbol(symbol);
     }
 
     function checkIfGameWon(board, symbol) {
@@ -181,23 +184,22 @@ function GamePlayer() {
     return { 
         getCurrentPlayer, 
         getPlayers, 
-        playTurn
+        playTurn, 
+        getBoard: gameBoard.getBoard
      }
 }
 
 function RenderObjects() {
 
     function generateSquare(cell, row, col) {
-        const square = document.createElement('div');
         const button = document.createElement('button');
 
-        square.textContent = cell.getSymbol();
-        square.classList.add('square');
-        square.dataset.row = row;
-        square.dataset.col = col;
+        button.textContent = cell.getSymbol();
+        button.classList.add('square-button');
+        button.dataset.row = row;
+        button.dataset.col = col;
 
-        square.appendChild(button);
-        return square
+        return button
     }
 
     const game = GamePlayer();
@@ -210,7 +212,7 @@ function RenderObjects() {
         const currentPlayer = game.getCurrentPlayer();
 
         boardDiv.textContent = "";
-        board.forEach(row, rowIndex => {
+        board.forEach((row, rowIndex) => {
             row.forEach((cell, colIndex) => {
                 square = generateSquare(cell, rowIndex, colIndex);
                 boardDiv.appendChild(square);
@@ -227,7 +229,8 @@ function RenderObjects() {
         updateBoard()
     }
 
-    boardDiv.addEventListener(click, clickHandlerBoard);
+    updateBoard()
+    boardDiv.addEventListener("click", clickHandlerBoard);
 }
 
 RenderObjects()
