@@ -12,7 +12,14 @@ function Cell() {
     const getRow = () => row;
     const getCol = () => col;
 
-    return { getSymbol, updateSymbol, updateRow, updateCol, getRow, getCol}
+    return { 
+        getSymbol, 
+        updateSymbol, 
+        updateRow, 
+        updateCol, 
+        getRow, 
+        getCol
+    }
 }
 
 function GameBoard() {
@@ -27,6 +34,10 @@ function GameBoard() {
                 board[i].push(cell);
             }
         }
+    }
+
+    function updateCell(row, col, symbol) {
+        board[row][col].updateSymbol(symbol)
     }
 
     function checkIfGameWon(board, symbol) {
@@ -110,17 +121,22 @@ function GameBoard() {
         
     }  
 
-    // Have another function that does this, but attached to the board
-    function checkIfSquareFilled(board, row, column) {
-        if (board[row][column] != 0) {
-            alert("Square already filled! Please choose a new one.");
-            return false
-        } else return true
-    }
+    // // Have another function that does this, but attached to the board
+    // function checkIfSquareFilled(board, row, column) {
+    //     if (board[row][column] != 0) {
+    //         alert("Square already filled! Please choose a new one.");
+    //         return false
+    //     } else return true
+    // }
 
     const getBoard = () => board;
 
-    return { initialiseGameBoard, getBoard, checkIfGameWon };
+    return { 
+        initialiseGameBoard, 
+        getBoard, 
+        checkIfGameWon,
+        updateCell
+    };
 }
 
 function GamePlayer() {
@@ -151,10 +167,10 @@ function GamePlayer() {
     const getCurrentPlayer = () => currentPlayer;
     const changeTurn = () => currentPlayer === players[0] ? currentPlayer = players[1] : currentPlayer = players[0];
 
-    const playTurn = (cell, index) => {
-        cell.updateSymbol(currentPlayer.symbol)
+    const playTurn = (row, col) => {
+        gameBoard.updateCell(row, col, currentPlayer.symbol);
 
-        if (gameBoard.checkIfGameWon(board, currentPlayer.symbol)) {
+        if (gameBoard.checkIfGameWon(gameBoard.getBoard(), currentPlayer.symbol)) {
             currentPlayer.wins += 1;
             currentPlayer = players[1];
         } else {
@@ -165,8 +181,8 @@ function GamePlayer() {
     return { 
         getCurrentPlayer, 
         getPlayers, 
-        playTurn, 
-        getBoard: gameBoard.getBoard }
+        playTurn
+     }
 }
 
 function RenderObjects() {
@@ -200,12 +216,14 @@ function RenderObjects() {
                 boardDiv.appendChild(square);
             }) 
         })
+        
         playerTurnDiv.textContent = `${currentPlayer.name} | ${currentPlayer.symbol} | Wins: ${currentPlayer.wins}`;
     }
 
     const clickHandlerBoard = (e) => {
-        const clickedSquareIndex = e.target.dataset.index;
-        game.playTurn(selectedSquare)
+        const clickedSquareRow = e.target.dataset.row;
+        const clickedSquareCol = e.target.dataset.col;
+        game.playTurn(clickedSquareRow, clickedSquareCol);
         updateBoard()
     }
 
