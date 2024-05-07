@@ -9,7 +9,11 @@ body {
 
 button {
     font-family: 'Roboto', sans-serif;
-    border: 2px #AFC97E solid;
+}
+
+.square-button:hover {
+    background-color: #E2D686;
+    border: 2px #a6ce5c solid;
 }
 
 * {
@@ -52,7 +56,8 @@ div.new,
     display: grid;
     justify-content: center;
     align-items: center;
-    background-color: #E2D686;
+    background-color: #e4debd;
+    border: 2px #bbc7a6 solid;
 } 
 
 div.turn {
@@ -73,5 +78,5 @@ button.new {
     font-size: 1rem;
     padding: 15px;
     border-radius: 10px;
-    border-width: 3px;
+    border: 3px #AFC97E solid;
 }
