@@ -11,11 +11,6 @@ button {
     font-family: 'Roboto', sans-serif;
 }
 
-.square-button:hover {
-    background-color: #E2D686;
-    border: 2px #a6ce5c solid;
-}
-
 * {
     color: #877B66;
 }
@@ -34,6 +29,38 @@ div.new,
     align-items: center;
     height: 50px;
     font-weight: 600;
+}
+
+.game-information {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.player-parent {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.player-name,
+.player-wins {
+    font-size: 1.5rem;
+}
+
+.symbol {
+    color: #96a7b8;
+}
+
+.player-name-active,
+.player-wins-active {
+    font-weight: 600;
+}
+
+.symbol-active {
+    font-weight: 800;
+    color: #296EB4;
 }
 
 .turn {
@@ -59,6 +86,11 @@ div.new,
     background-color: #e4debd;
     border: 2px #bbc7a6 solid;
 } 
+
+.square-button:hover {
+    background-color: #E2D686;
+    border: 2px #a6ce5c solid;
+}
 
 div.turn {
     width: 500px;
