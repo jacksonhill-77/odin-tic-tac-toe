@@ -151,12 +151,14 @@ function GamePlayer() {
         {
             name: playerOneName,
             symbol: "X",
-            wins: 0
+            wins: 0,
+            number: 1
         },
         {
             name: playerTwoName,
             symbol: "O",
-            wins: 0
+            wins: 0,
+            number: 2
         }
     ];
 
@@ -172,34 +174,46 @@ function GamePlayer() {
 
     const playTurn = (row, col) => {
         gameBoard.updateCell(row, col, currentPlayer.symbol);
-
-        if (gameBoard.checkIfGameWon(gameBoard.getBoard(), currentPlayer.symbol)) {
-            currentPlayer.wins += 1;
-            currentPlayer = players[1];
-        } else {
-            changeTurn();
-        }
     }
 
     return { 
         getCurrentPlayer, 
+        changeTurn,
         getPlayers, 
         playTurn, 
         resetWins,
         getBoard: gameBoard.getBoard,
-        resetGameBoard: gameBoard.resetGameBoard
+        resetGameBoard: gameBoard.resetGameBoard,
+        checkIfGameWon: gameBoard.checkIfGameWon
      }
 }
 
 function RenderObjects() {
 
     const game = GamePlayer();
+    const players = game.getPlayers();
     const boardDiv = document.querySelector('.board');
-    const playerTurnDiv = document.querySelector('div.turn');
     const newGameButton = document.querySelector('.new-game');
     const newRoundButton = document.querySelector('.new-round');
+    const winnerDiv = document.querySelector('#winner')
 
-    function generateSquare(cell, row, col) {
+    const player1Name = document.querySelector('.player-parent#one>.player-name');
+    const player2Name = document.querySelector('.player-parent#two>.player-name');
+    const player1Wins = document.querySelector('.player-parent#one>.player-wins');
+    const player2Wins = document.querySelector('.player-parent#two>.player-wins');
+    const player1Symbol = document.querySelector('.player-parent#one>.symbol');
+    const player2Symbol = document.querySelector('.player-parent#two>.symbol');
+    const player1Parent = document.querySelector('.player-parent#one');
+    const player2Parent = document.querySelector('.player-parent#two');
+
+    player1Wins.textContent = 'Wins: 0'
+    player2Wins.textContent = 'Wins: 0'
+    player1Name.textContent = players[0].name;
+    player2Name.textContent = players[1].name;
+    player1Symbol.textContent = players[0].symbol;
+    player2Symbol.textContent = players[1].symbol;
+
+    const generateSquare = (cell, row, col) => {
         const button = document.createElement('button');
 
         button.textContent = cell.getSymbol();
@@ -210,9 +224,31 @@ function RenderObjects() {
         return button
     }
 
+    const highlightCurrentPlayerDiv = () => {
+        const playerDivs = document.querySelectorAll('.player-parent');
+        const currentPlayer = game.getCurrentPlayer();
+
+        playerDivs.forEach((div) => div.classList.remove('player-parent-active'));
+
+        if (currentPlayer.number === 1) {
+            player1Parent.classList.add('player-parent-active');
+        } else {
+            player2Parent.classList.add('player-parent-active');
+        }
+    }
+
+    const updateGameInformation = () => {
+        highlightCurrentPlayerDiv()
+        const currentPlayer = game.getCurrentPlayer();
+        if (currentPlayer.number === 1) {
+            player1Wins.textContent = `Wins: ${currentPlayer.wins}`
+        } else {
+            player2Wins.textContent = `Wins: ${currentPlayer.wins}`
+        }
+    }
+
     const updateBoard = () => {
         const board = game.getBoard();
-        const currentPlayer = game.getCurrentPlayer();
 
         boardDiv.textContent = "";
         board.forEach((row, rowIndex) => {
@@ -222,7 +258,8 @@ function RenderObjects() {
             }) 
         })
         
-        playerTurnDiv.textContent = `Current turn: ${currentPlayer.name}. Symbol: ${currentPlayer.symbol}. Wins: ${currentPlayer.wins}`;
+        updateGameInformation()
+        
     }
 
     const resetBoard = () => {
@@ -235,13 +272,53 @@ function RenderObjects() {
         resetBoard();
     }
 
+    const isGameWon = () => {
+        const currentPlayer = game.getCurrentPlayer();
+        if (game.checkIfGameWon(game.getBoard(), currentPlayer.symbol)) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    const updateWins = () => {
+
+        const currentPlayer = game.getCurrentPlayer();
+
+        if (isGameWon()) {
+            currentPlayer.wins += 1;
+            if (currentPlayer.number === 1) {
+                player1Wins.textContent = `Wins: ${currentPlayer.wins}`
+            } else {
+                player2Wins.textContent = `Wins: ${currentPlayer.wins}`
+            }
+            
+            winnerDiv.textContent = `${currentPlayer.name} wins!`
+            
+            resetBoard()
+        };
+    }
+
     const clickHandlerBoard = (e) => {
+
         if (e.target.textContent != "") {
             alert("Please select a square that hasn't been clicked yet!")
         } else {
             const clickedSquareRow = e.target.dataset.row;
             const clickedSquareCol = e.target.dataset.col;
+
             game.playTurn(clickedSquareRow, clickedSquareCol);
+             
+            if (isGameWon()) {
+                updateWins()
+            } else {
+                console.log(game.getCurrentPlayer())
+                game.changeTurn()
+                console.log(game.getCurrentPlayer())
+            }
+
+            console.log(game.getBoard())
+
             updateBoard()
         }
     }

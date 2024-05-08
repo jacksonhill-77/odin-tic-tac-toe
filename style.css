@@ -31,17 +31,27 @@ div.new,
     font-weight: 600;
 }
 
-.game-information {
+#game-information {
+    font-size: 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 500px;
 }
 
-.player-parent {
+.player-parent,
+.player-parent-active {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+    gap: 10px;
+    padding: 15px;
+}
+
+.player-parent-active {
+    border: 3px #7092b4 solid;
+    background-color: #e4debd;
 }
 
 .player-name,
@@ -50,22 +60,20 @@ div.new,
 }
 
 .symbol {
-    color: #96a7b8;
-}
-
-.player-name-active,
-.player-wins-active {
-    font-weight: 600;
-}
-
-.symbol-active {
-    font-weight: 800;
     color: #296EB4;
+    font-size: 3rem;
 }
 
-.turn {
+#winner,
+button.new {
+    height: 30px;
+}
+
+#winner {
+    width: 40%;
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 .board {
@@ -106,9 +114,9 @@ button.new {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 30px;
     font-size: 1rem;
     padding: 15px;
     border-radius: 10px;
     border: 3px #AFC97E solid;
+    background-color: #e4debd;
 }
