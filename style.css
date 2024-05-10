@@ -155,7 +155,17 @@ button#enter-names {
     gap: 20px;
 }
 
-form>#enter-names {
+#form-buttons {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+}
+
+#form-buttons>button {
+    flex: 1 1 0;
+}
+
+#dialog-container>#enter-names {
     gap: 20px;
 }
 

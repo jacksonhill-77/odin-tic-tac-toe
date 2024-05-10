@@ -171,6 +171,10 @@ function GamePlayer() {
         players[0].wins = 0;
         players[1].wins = 0;
     }
+    const updatePlayerNames = (player1Name, player2Name) => {
+        players[0].name = player1Name;
+        players[1].name = player2Name;
+    }
 
     const playTurn = (row, col) => {
         gameBoard.updateCell(row, col, currentPlayer.symbol);
@@ -180,6 +184,7 @@ function GamePlayer() {
         getCurrentPlayer, 
         changeTurn,
         getPlayers, 
+        updatePlayerNames,
         playTurn, 
         resetWins,
         getBoard: gameBoard.getBoard,
@@ -199,6 +204,7 @@ function RenderObjects() {
     const enterNamesButton = document.querySelector('#enter-names');
     const closeButton = document.querySelector('#close');
     const dialog = document.querySelector('#dialog');
+    const form = document.querySelector('form');
 
     const player1Name = document.querySelector('.player-parent#one>.player-name');
     const player2Name = document.querySelector('.player-parent#two>.player-name');
@@ -225,6 +231,13 @@ function RenderObjects() {
         button.dataset.col = col;
 
         return button
+    }
+
+    const renderPlayerNames = () => {
+        const players = game.getPlayers();
+
+        player1Name.textContent = players[0].name;
+        player2Name.textContent = players[1].name;
     }
 
     const highlightCurrentPlayerDiv = () => {
@@ -326,8 +339,18 @@ function RenderObjects() {
         }
     }
 
-    updateBoard()
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
 
+        const name1 = document.querySelector('#name1').value;
+        const name2 = document.querySelector('#name2').value;
+
+        game.updatePlayerNames(name1, name2);
+
+        renderPlayerNames()
+
+        dialog.close()
+    })
     enterNamesButton.addEventListener('click', () => {
         dialog.showModal();
     })
@@ -337,6 +360,8 @@ function RenderObjects() {
     newGameButton.addEventListener("click", newGame)
     newRoundButton.addEventListener("click", resetBoard)
     boardDiv.addEventListener("click", clickHandlerBoard);
+
+    updateBoard()
 }
 
 RenderObjects()
