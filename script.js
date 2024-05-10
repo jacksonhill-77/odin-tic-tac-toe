@@ -195,7 +195,10 @@ function RenderObjects() {
     const boardDiv = document.querySelector('.board');
     const newGameButton = document.querySelector('.new-game');
     const newRoundButton = document.querySelector('.new-round');
-    const winnerDiv = document.querySelector('#winner')
+    const winnerDiv = document.querySelector('#winner');
+    const enterNamesButton = document.querySelector('#enter-names');
+    const closeButton = document.querySelector('#close');
+    const dialog = document.querySelector('#dialog');
 
     const player1Name = document.querySelector('.player-parent#one>.player-name');
     const player2Name = document.querySelector('.player-parent#two>.player-name');
@@ -325,6 +328,12 @@ function RenderObjects() {
 
     updateBoard()
 
+    enterNamesButton.addEventListener('click', () => {
+        dialog.showModal();
+    })
+    closeButton.addEventListener('click', () => {
+        dialog.close()
+    })
     newGameButton.addEventListener("click", newGame)
     newRoundButton.addEventListener("click", resetBoard)
     boardDiv.addEventListener("click", clickHandlerBoard);

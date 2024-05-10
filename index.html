@@ -30,5 +30,21 @@
             <button class="new-round new">New round</button>
         </div>
         <div class="board"></div>
+        <button id="enter-names">Click to enter custom player names</button>
+        <dialog id="dialog">
+            <div id="dialog-container">
+                <form id="enter-names" method="post">
+                    <div class="form-input">
+                        <label for="name1">Enter player 1's name:</label>
+                        <input type="text" name="name1" id="name1" required>
+                    </div>
+                    <div class="form-input">
+                        <label for="name2">Enter player 2's name:</label>
+                        <input type="text" name="name2" id="name2" required>
+                    </div>
+                </form>
+                <button id='close' autofocus>Close</button>
+            </div>
+        </dialog>
     </body>
 </html>
