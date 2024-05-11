@@ -46,6 +46,7 @@ div.new,
     align-items: center;
     gap: 10px;
     padding: 15px;
+    border-radius: 10px;
 }
 
 .player-parent-active {
@@ -120,15 +121,20 @@ button.new {
     background-color: #e4debd;
 }
 
+button.new:hover,
+button#enter-names:hover {
+    background-color: #e6dba3;
+}
+
 button#enter-names {
     width: 300px;
     height: 50px;
-    background-color: #e0c19d;
+    background-color: #e4debd;
     border-radius: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px #a6ce5c solid;
+    border: 2px #cc9752 solid;
     font-size: 1rem;
     font-weight: 600;
 }
@@ -136,7 +142,7 @@ button#enter-names {
 #dialog {
     background-color: #e4debd;
     border-radius: 15px;
-    border: 2px #a6ce5c solid;
+    border: 2px #cc9752 solid;
     padding: 15px;
     width: 350px;
     height: 175px;

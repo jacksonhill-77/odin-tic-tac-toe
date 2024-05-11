@@ -37,6 +37,19 @@ function GameBoard() {
         }
     }
 
+    const printBoard = () => {
+        let printedBoard = []
+        board.forEach(row => {
+            let printedRow = []
+            row.forEach(cell => {
+                let symbol = cell.getSymbol()
+                printedRow.push(symbol)
+            })
+            printedBoard.push(printedRow)
+        })
+        console.log(printedBoard)
+    }
+
     const resetGameBoard = () => {
         board = [];
         initialiseGameBoard()
@@ -50,14 +63,14 @@ function GameBoard() {
 
         function checkSquares(arrays, symbol) {
             for (const row of arrays) {
-                let squaresMarked = 0;
-                for (const square of row) {
-                    if (square.getSymbol() == symbol) {
-                        squaresMarked += 1;
+                let cellsMarked = 0;
+                for (const cell of row) {
+                    if (cell.getSymbol() == symbol) {
+                        cellsMarked += 1;
                     }
                 }
                 
-                if (squaresMarked == 3) {
+                if (cellsMarked == 3) {
                     return true
                 }
             }   
@@ -87,11 +100,12 @@ function GameBoard() {
     
         function giveBottomLeftDiagonal() {
             let bottomLeftDiagonal = []
-            for (let row = 3; row < board.length; row--) {
-                for (let col = 0; col < board.length; col++) {
-                    bottomLeftDiagonal.push(board[row][col]);
+            let col = 0;
+            for (let row = 2; row > -1; row--) {
+                bottomLeftDiagonal.push(board[row][col]);
+                col += 1
                 }
-            } return bottomLeftDiagonal
+            return bottomLeftDiagonal
         }   
     
         function checkRows() {
@@ -105,6 +119,14 @@ function GameBoard() {
     
         function checkDiagonals() {
             const diagonals = []
+            const topleft = giveTopLeftDiagonal();
+            const bottomLeft = giveBottomLeftDiagonal();
+            topleft.forEach(cell => {
+                console.log(cell.getSymbol())
+            })
+            bottomLeft.forEach(cell => {
+                console.log(cell.getSymbol())
+            })
             diagonals.push(giveTopLeftDiagonal());
             diagonals.push(giveBottomLeftDiagonal());
     
@@ -134,7 +156,8 @@ function GameBoard() {
         resetGameBoard,
         getBoard, 
         checkIfGameWon,
-        updateCell
+        updateCell,
+        printBoard
     };
 }
 
@@ -189,7 +212,8 @@ function GamePlayer() {
         resetWins,
         getBoard: gameBoard.getBoard,
         resetGameBoard: gameBoard.resetGameBoard,
-        checkIfGameWon: gameBoard.checkIfGameWon
+        checkIfGameWon: gameBoard.checkIfGameWon,
+        printBoard: gameBoard.printBoard
      }
 }
 
@@ -253,14 +277,15 @@ function RenderObjects() {
         }
     }
 
+    const renderWins = () => {
+        currentPlayers = game.getPlayers()
+        player1Wins.textContent = `Wins: ${currentPlayers[0].wins}`
+        player2Wins.textContent = `Wins: ${currentPlayers[1].wins}`
+    }
+
     const updateGameInformation = () => {
         highlightCurrentPlayerDiv()
-        const currentPlayer = game.getCurrentPlayer();
-        if (currentPlayer.number === 1) {
-            player1Wins.textContent = `Wins: ${currentPlayer.wins}`
-        } else {
-            player2Wins.textContent = `Wins: ${currentPlayer.wins}`
-        }
+        renderWins()
     }
 
     const updateBoard = () => {
@@ -302,12 +327,10 @@ function RenderObjects() {
         const currentPlayer = game.getCurrentPlayer();
 
         if (isGameWon()) {
+
             currentPlayer.wins += 1;
-            if (currentPlayer.number === 1) {
-                player1Wins.textContent = `Wins: ${currentPlayer.wins}`
-            } else {
-                player2Wins.textContent = `Wins: ${currentPlayer.wins}`
-            }
+
+            renderWins()
             
             winnerDiv.textContent = `${currentPlayer.name} wins!`
             
@@ -328,12 +351,8 @@ function RenderObjects() {
             if (isGameWon()) {
                 updateWins()
             } else {
-                console.log(game.getCurrentPlayer())
                 game.changeTurn()
-                console.log(game.getCurrentPlayer())
             }
-
-            console.log(game.getBoard())
 
             updateBoard()
         }
